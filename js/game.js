@@ -19,8 +19,24 @@ function create() {
 	peasantGroup = game.add.group();
 	peasants = [];
 
-	for(var i = 0; i < 5; i++){
-		peasants.push(new peasant(i * 100,10, peasantGroup, 'peasant'));
+	for(var i = 0; i < 7; i++){
+		reverse = i % 2;
+		if (reverse === 1)
+			reverse = true;
+		else
+			reverse = false;
+
+		x = (i+1) * 100;
+		if(!reverse)
+		{
+			y = 10;
+		}
+		else
+		{
+			y = 550;
+		}
+
+		peasants.push(new peasant(x,y, reverse, peasantGroup, 'peasant'));
 	}
 	
 
@@ -49,11 +65,30 @@ function update() {
     	player.body.velocity.y = 150;
     }
 
+    for(var i = 0; i < peasants.length; i++){
+    	if(peasants[i].reverse === false){
+    		peasants[i].peasant.body.velocity.y = 150;
+    	}
+    	else
+    	{
+    		peasants[i].peasant.body.velocity.y = -150;
+    	}
+    	if(peasants[i].reverse === false && peasants[i].peasant.body.y >= game.height){
+    		peasants[i].reverse = !peasants[i].reverse;
+    	}
+    	else if(peasants[i].reverse === true && peasants[i].peasant.body.y <= 0)
+    	{
+			peasants[i].reverse = !peasants[i].reverse;
+    	}
+    }
+
 }
 
-peasant = function(x, y, group, sprite) {
+peasant = function(x, y, reverse, group, sprite) {
 	this.x = x;
 	this.y = y;
+
+	this.reverse = reverse;
 
 	this.peasant = group.create(x, y, sprite);
 }
